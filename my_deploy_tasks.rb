@@ -5,13 +5,6 @@ namespace(:mine) do
   end
 end
 
-namespace(:users) do
-  desc 'add an admin user'
-  task :add_admin do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake bob:add_admin"
-  end
-end
-
 namespace :monitor do
   desc "Analyze Rails Log instantaneously" 
   task :pl_analyze, :roles => :app do
@@ -42,11 +35,4 @@ namespace :monitor do
     end
   end
 
-end
-
-namespace :break_shit do 
-  desc 'delete all users, orders, and xtensions from the db'
-  task :hard do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake bob:destroy_everything[really]" 
-  end
 end

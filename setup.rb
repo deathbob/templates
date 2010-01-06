@@ -23,8 +23,8 @@ capify!
 
 # run 'curl -L http://github.com/inmunited/rails_templates/raw/master/assets/deploy.rb > config/deploy.rb'
 
-file 'config/deploy.rb', Net::HTTP.get_response(URI.parse('http://github.com/inmunited/rails_templates/raw/master/assets/deploy.rb')).body
-file 'config/deploy.yml', ERB.new(Net::HTTP.get_response(URI.parse('http://github.com/inmunited/rails_templates/raw/master/assets/deploy.yml')).body).result(binding)
+file 'config/deploy.rb', Net::HTTP.get_response(URI.parse('http://github.com/deathbob/templates/raw/master/deploy.rb')).body
+file 'config/deploy.yml', ERB.new(Net::HTTP.get_response(URI.parse('http://github.com/deathbob/templates/raw/master/deploy.yml')).body).result(binding)
 
 puts "you need to setup the deploy.yml, particularly the production ip"
 
