@@ -15,30 +15,24 @@ run "touch scratch.txt"
 
 app_name = Dir.pwd.split('/').last
 
-
 # Install and configure capistrano
 # run "sudo gem install capistrano" if yes?('Install Capistrano on your local system? (y/n)')
-
 capify!
 
+file 'config/my_deploy_tasks.rb', Net::HTTP.get_response(UIR.parse('http://github.com/deathbob/templates/raw/master/my_deploy_tasks.rb')).body
+
 # run 'curl -L http://github.com/inmunited/rails_templates/raw/master/assets/deploy.rb > config/deploy.rb'
-
-file 'config/deploy.rb', Net::HTTP.get_response(URI.parse('http://github.com/deathbob/templates/raw/master/deploy.rb')).body
-file 'config/deploy.yml', ERB.new(Net::HTTP.get_response(URI.parse('http://github.com/deathbob/templates/raw/master/deploy.yml')).body).result(binding)
-
-puts "you need to setup the deploy.yml, particularly the production ip"
-
+file 'config/deploy.rb',  Net::HTTP.get_response(URI.parse('http://github.com/deathbob/templates/raw/master/deploy.rb')).body
+file 'config/deploy.yml', Net::HTTP.get_response(URI.parse('http://github.com/deathbob/templates/raw/master/deploy.yml')).body.gsub('app_name', app_name)
 
 if yes?("\nUse MongoDB? (yes/no)")
 file 'config/database.yml', <<-CODE
 # Using MongoDB
 CODE
- 
-  # Don't need ActiveRecord
   environment 'config.frameworks -= [:active_record]'
- 
-  # MongoMapper
   gem 'mongo_mapper'
+else
+  file 'config/database.yml',  Net::HTTP.get_response(URI.parse('http://github.com/deathbob/templates/raw/master/database.yml')).body.gsub("app_name", app_name)
 end
 
 run "git init"
@@ -53,18 +47,14 @@ tmp/cache/**
 mkmf.log
 END
 
-
 plugin 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git'
 run "script/plugin install git://github.com/thoughtbot/clearance.git"
 plugin 'hoptoad_notifier', :git => "git://github.com/thoughtbot/hoptoad_notifier.git"
-
-# Install JQuery
  
 file 'public/javascripts/jquery.js', Net::HTTP.get_response(URI.parse('http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js')).body
 file 'public/javascripts/jquery-ui.js', ERB.new(Net::HTTP.get_response(URI.parse('http://jqueryui.com/download/jquery-ui-1.7.1.custom.zip')).body).result(binding)
  
 plugin 'jrails', :git => 'git://github.com/jauderho/jrails.git'
- 
 
 initializer 'hoptoad.rb', <<-FILE
 HoptoadNotifier.configure do |config|
@@ -72,19 +62,18 @@ HoptoadNotifier.configure do |config|
 end
 FILE
 
-puts "puts don't forget to add your hoptoad key to the hoptoad.rb initializer"
-
-env = <<-HERE
+environment <<-HERE
   require 'hodel_3000_compliant_logger'
   config.logger = Hodel3000CompliantLogger.new(config.log_path)
 HERE
 
-# Finish Up
-
 run "git add ."
 run "git commit -m 'initial commit'"
-
 
 rake('gems:install', :sudo => true)
 rake('gems:unpack')
 
+
+
+puts "puts don't forget to add your hoptoad key to the hoptoad.rb initializer"
+puts "you need to setup the deploy.yml, particularly the production ip"
