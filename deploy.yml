@@ -1,0 +1,16 @@
+application:    "mercuryfon"
+repository:     "git@github.com:inmunited/mercury.git"
+crontasks:      no
+package_assets: no
+
+staging:
+    server:     "67.23.27.232"
+    domain:     "www.mercurystaging.inmunited.com"
+    redirect:   "mercurystaging.inmunited.com"
+    branch:     "master"
+     
+# production:
+#     server:     ""
+#     domain:     ""
+#     redirect:   ""
+#     branch:     "master"   
