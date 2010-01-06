@@ -47,9 +47,10 @@ tmp/cache/**
 mkmf.log
 END
 
-plugin 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git'
-run "script/plugin install git://github.com/thoughtbot/clearance.git"
-plugin 'hoptoad_notifier', :git => "git://github.com/thoughtbot/hoptoad_notifier.git"
+plugin 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git' if yes?("Paperclip?")
+run "script/plugin install git://github.com/thoughtbot/clearance.git" if yes?("Clearance?")
+plugin 'hoptoad_notifier', :git => "git://github.com/thoughtbot/hoptoad_notifier.git" if yes?("Hoptoad?")
+plugin 'oink', :git => 'git://github.com/noahd1/oink.git' 
  
 file 'public/javascripts/jquery.js', Net::HTTP.get_response(URI.parse('http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js')).body
 file 'public/javascripts/jquery-ui.js', ERB.new(Net::HTTP.get_response(URI.parse('http://jqueryui.com/download/jquery-ui-1.7.1.custom.zip')).body).result(binding)
@@ -67,6 +68,23 @@ environment <<-HERE
   config.logger = Hodel3000CompliantLogger.new(config.log_path)
 HERE
 
+file 'app/controllers/application_controller.rb', <<-CODE
+# Filters added to this controller apply to all controllers in the application.
+# Likewise, all the methods added will be available for all controllers.
+
+class ApplicationController < ActionController::Base
+  helper :all # include all helpers, all the time
+  protect_from_forgery # See ActionController::RequestForgeryProtection for details
+  include Oink::MemoryUsageLogger
+  include Oink::InstanceTypeCounter
+
+
+  # Scrub sensitive parameters from your log
+  # filter_parameter_logging :password
+end
+CODE
+
+
 run "git add ."
 run "git commit -m 'initial commit'"
 
@@ -75,5 +93,7 @@ rake('gems:unpack')
 
 
 
-puts "puts don't forget to add your hoptoad key to the hoptoad.rb initializer"
-puts "you need to setup the deploy.yml, particularly the production ip"
+puts <<-TALKY \nDon't forget to add your hoptoad key to the hoptoad.rb initializer.\n
+You need to setup the deploy.yml, particularly the production ip.\n
+TALKY
+

@@ -1,12 +1,12 @@
-application:    "#{app_name}"
-repository:     "git@github.com:inmunited/#{app_name}.git"
+application:    "app_name"
+repository:     "git@github.com:inmunited/app_name.git"
 crontasks:      no
 package_assets: no
 
 staging:
     server:     "67.23.27.232"
-    domain:     "www.#{app_name}staging.inmunited.com"
-    redirect:   "#{app_name}staging.inmunited.com"
+    domain:     "www.app_namestaging.inmunited.com"
+    redirect:   "app_namestaging.inmunited.com"
     branch:     "master"
      
 # production:

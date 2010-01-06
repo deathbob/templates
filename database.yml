@@ -4,7 +4,7 @@ development:
   adapter: mysql
   encoding: utf8
   reconnect: true
-  database: #{app_name}_development
+  database: app_name_development
   pool: 5
   username: root
   password:
@@ -19,8 +19,8 @@ test:
   pool: 5
   timeout: 5000
 
-production:
-  adapter: sqlite3
-  database: db/production.sqlite3
-  pool: 5
-  timeout: 5000
+# production:
+#   adapter: sqlite3
+#   database: db/production.sqlite3
+#   pool: 5
+#   timeout: 5000
