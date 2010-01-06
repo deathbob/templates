@@ -19,7 +19,7 @@ app_name = Dir.pwd.split('/').last
 # run "sudo gem install capistrano" if yes?('Install Capistrano on your local system? (y/n)')
 capify!
 
-file 'config/my_deploy_tasks.rb', Net::HTTP.get_response(UIR.parse('http://github.com/deathbob/templates/raw/master/my_deploy_tasks.rb')).body
+file 'config/my_deploy_tasks.rb', Net::HTTP.get_response(URI.parse('http://github.com/deathbob/templates/raw/master/my_deploy_tasks.rb')).body
 
 # run 'curl -L http://github.com/inmunited/rails_templates/raw/master/assets/deploy.rb > config/deploy.rb'
 file 'config/deploy.rb',  Net::HTTP.get_response(URI.parse('http://github.com/deathbob/templates/raw/master/deploy.rb')).body
