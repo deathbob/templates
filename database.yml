@@ -4,7 +4,7 @@ development:
   adapter: mysql
   encoding: utf8
   reconnect: true
-  database: mercury_development
+  database: #{app_name}_development
   pool: 5
   username: root
   password:
