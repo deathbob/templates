@@ -6,6 +6,12 @@
 # http://github.com/inmunited/rails_templates
 # http://github.com/mbleigh/rails-templates/blob/e9b9f3efebca6d519fa75f029fe899798d7e369d/twitterapp.rb
 
+# example usage 
+#
+# rails NAME_OF_PROJECT -m PATH_TO_TEMPLATE(CAN BE URL)
+# rails templates -m template/setup.rb
+#
+
 require 'erb'
 require 'net/http'
 
@@ -49,7 +55,7 @@ END
 
 plugin 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git' if yes?("Paperclip?")
 run "script/plugin install git://github.com/thoughtbot/clearance.git" if yes?("Clearance?")
-plugin 'hoptoad_notifier', :git => "git://github.com/thoughtbot/hoptoad_notifier.git" if yes?("Hoptoad?")
+plugin 'hoptoad_notifier', :git => "git://github.com/thoughtbot/hoptoad_notifier.git"  if yes?("Hoptoad?")
 plugin 'oink', :git => 'git://github.com/noahd1/oink.git' 
  
 file 'public/javascripts/jquery.js', Net::HTTP.get_response(URI.parse('http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js')).body
@@ -58,7 +64,7 @@ file 'public/javascripts/jquery-ui.js', ERB.new(Net::HTTP.get_response(URI.parse
 plugin 'jrails', :git => 'git://github.com/jauderho/jrails.git'
 
 initializer 'hoptoad.rb', <<-FILE
-HoptoadNotifier.configure do |config|
+  HoptoadNotifier.configure do |config|
   config.api_key = 'HOPTOAD-KEY'
 end
 FILE
@@ -84,6 +90,9 @@ class ApplicationController < ActionController::Base
 end
 CODE
 
+ generate :controller, "welcome index"  
+ route "map.root :controller => 'welcome'"  
+
 
 run "git add ."
 run "git commit -m 'initial commit'"
@@ -92,8 +101,9 @@ rake('gems:install', :sudo => true)
 rake('gems:unpack')
 
 
-
-puts <<-TALKY \nDon't forget to add your hoptoad key to the hoptoad.rb initializer.\n
+puts "***************************************************************"
+puts <<-TALKY 
+Don't forget to add your hoptoad key to the hoptoad.rb initializer.\n
 You need to setup the deploy.yml, particularly the production ip.\n
 TALKY
-
+puts "***************************************************************"
